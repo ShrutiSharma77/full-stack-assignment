@@ -18,17 +18,25 @@ const SUBMISSION = [
 
 ]
 
+app.use(express.json())
+
 app.post('/signup', function(req, res) {
   // Add logic to decode body
   // body should have email and password
-
+  const {email, password} = req.body
+  
+  const loggedUser = USERS.find(user => user.email === email)
+  if (loggedUser) {
+    res.status(400).json('You already have an account')
+  }
 
   //Store email and password (as is for now) in the USERS array above (only if the user with the given email doesnt exist)
-
-
+  USERS.push({email,password})
+  res.status(200).send(`Hello World!`)
   // return back 200 status code to the client
-  res.send('Hello World!')
+  
 })
+
 
 app.post('/login', function(req, res) {
   // Add logic to decode body
