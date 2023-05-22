@@ -4,6 +4,8 @@ const port = 3000
 
 const USERS = [];
 
+const ADMINS = [];
+
 const QUESTIONS = [{
     title: "Two states",
     description: "Given an array , return the maximum of the array?",
@@ -103,6 +105,19 @@ app.post("/submissions", function(req, res) {
 // leaving as hard todos
 // Create a route that lets an admin add a new problem
 // ensure that only admins can do that.
+app.post("/add/:adminId",(req,res)=>{
+    const {adminId} = req.params
+    const {question} = req.body
+
+    const admins = ADMINS.find(admin => admin.id === adminId)
+
+    if (admins) {
+        QUESTIONS.push(question)
+        res.status(200).send("Question added successfully!!")
+    }else{
+        res.status(404).send("Access Denied!!")
+    }
+})
 
 app.listen(port, function() {
   console.log(`Example app listening on port ${port}`)
