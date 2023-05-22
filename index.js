@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3001
+const port = 3000
 
 const USERS = [];
 
@@ -40,23 +40,42 @@ app.post('/signup', function(req, res) {
 app.post('/login', function(req, res) {
   // Add logic to decode body
   // body should have email and password
+  const { email,password } = req.body
+  
+    // Check if the user with the given email exists in the USERS array
+    // Also ensure that the password is the same
+  const loggedUser = USERS.find(user => user.email === email)
 
+  const token = generateToken()
+
+  if (loggedUser && loggedUser.password === password) {
+    res.status(200).json({msg:"login successful!! hello world from route 2", token:token})
+  }else{
+    res.status(401).json({msg:"Error!!Incorrect password or email"})
+  }
   // Check if the user with the given email exists in the USERS array
   // Also ensure that the password is the same
-
-
+  function generateToken() {
+    const tokenLength = 32;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    for (let i = 0; i < tokenLength; i++) {
+      token += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return token;
+  }
+  
   // If the password is the same, return back 200 status code to the client
   // Also send back a token (any random string will do for now)
   // If the password is not the same, return back 401 status code to the client
-
-
-  res.send('Hello World from route 2!')
+  
 })
 
 app.get('/questions', function(req, res) {
 
   //return the user all the questions in the QUESTIONS array
   res.send("Hello World from route 3!")
+  res.send(json({QUESTIONS}))
 })
 
 app.get("/submissions", function(req, res) {
